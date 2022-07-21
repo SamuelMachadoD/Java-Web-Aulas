@@ -1,0 +1,57 @@
+package dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import model.Voos;
+
+public class DaoVoo {
+	
+	private Connection connection;
+	
+	public DaoVoo(Connection connection) {
+		this.connection = connection;
+	}
+	
+	public void criarVOO(Voos voo) {
+		try {
+			String sql = "INSERT INTO voos (NMRVOO, DATA, PRECO, ORIGEM, DESTINO, DURACAOVOO, NUMEROASSENTOS) VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+			try (PreparedStatement pstm = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+				pstm.setInt(1, voo.getNmrDoVoo());
+				pstm.setDate(2, voo.getData());
+				pstm.setFloat(3, voo.getPreco());
+				pstm.setString(4, voo.getOrigem());
+				pstm.setString(5, voo.getDestino());
+				pstm.setDate(6, voo.getDuracaoVoo());
+				pstm.setInt(7, voo.getNumeroAssentos());
+
+				pstm.execute();
+			} 
+		}catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+		
+	}
+	
+	public List<Voos> listar() {
+		List<Voos> produtos = new ArrayList<Voos>();
+		try {
+			String sql = "SELECT * FROM voos";
+
+			try (PreparedStatement pstm = connection.prepareStatement(sql)) {
+				pstm.execute();
+
+				trasformarResultSetEmProduto(produtos, pstm);
+			}
+			return produtos;
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+}
+

@@ -1,0 +1,16 @@
+package dao;
+
+import java.sql.Connection;
+
+public class DaoVoo {
+	
+	private Connection connection;
+	
+	public DaoVoo(Connection connection) {
+		this.connection = connection;
+	}
+	
+	public void salvarVOO(Voos voo) {
+		
+	}
+}
